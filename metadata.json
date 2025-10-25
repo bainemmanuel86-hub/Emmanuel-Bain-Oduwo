@@ -1,0 +1,5 @@
+{
+  "name": "AI Predictive Maintenance for Bioreactors",
+  "description": "An AI-powered dashboard to simulate predictive maintenance for pharmaceutical bioreactors. It visualizes live sensor data and uses AI to predict equipment failure, time to maintenance, and quality metrics.",
+  "requestFramePermissions": []
+}
