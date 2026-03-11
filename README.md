@@ -1,11 +1,11 @@
 # AI Reactive Maintenance for Big Pharma Machines
 
-An AI-powered predictive maintenance dashboard for pharmaceutical bioreactors. It visualizes live sensor data and leverages **Google Gemini AI** to predict equipment failure probability, time to maintenance, and key quality metrics — helping pharma teams prevent costly downtime before it happens.
+An AI-powered predictive maintenance dashboard for pharmaceutical bioreactors. It visualizes live sensor data and leverages **DeepSeek AI** to predict equipment failure probability, time to maintenance, and key quality metrics — helping pharma teams prevent costly downtime before it happens.
 
 ## Features
 
 - 📊 **Live Sensor Dashboard** — Real-time visualisation of bioreactor metrics (temperature, pH, dissolved oxygen, agitation speed, pressure, and more) using interactive Recharts graphs
-- 🤖 **AI-Powered Predictions** — Google Gemini AI analyses sensor trends and predicts equipment failure probability, estimated time to next maintenance, and batch quality score
+- 🤖 **AI-Powered Predictions** — DeepSeek AI analyses sensor trends and predicts equipment failure probability, estimated time to next maintenance, and batch quality score
 - ⚠️ **Anomaly Detection** — Automatic flagging of out-of-range sensor readings with severity levels
 - 🧪 **Maintenance Recommendations** — AI-generated, actionable maintenance suggestions based on current sensor state
 - 📱 **Responsive UI** — Clean, dark-themed interface built with Tailwind CSS
@@ -17,14 +17,14 @@ An AI-powered predictive maintenance dashboard for pharmaceutical bioreactors. I
 | Frontend Framework | React 19 + TypeScript |
 | Build Tool | Vite |
 | Charts | Recharts |
-| AI / LLM | Google Gemini AI (`@google/genai`) |
+| AI / LLM | DeepSeek AI (`openai` SDK) |
 | Styling | Tailwind CSS |
 | Deployment | Vercel |
 
 ## Prerequisites
 
 - **Node.js 18+**
-- A **Google Gemini API key** — get one free at [Google AI Studio](https://aistudio.google.com/app/apikey)
+- A **DeepSeek API key** — get one free at [DeepSeek Platform](https://platform.deepseek.com)
 
 ## Local Development
 
@@ -43,7 +43,7 @@ An AI-powered predictive maintenance dashboard for pharmaceutical bioreactors. I
 
 3. **Set up environment variables**
 
-   Copy the example env file and add your Gemini API key:
+   Copy the example env file and add your DeepSeek API key:
 
    ```bash
    cp .env.example .env.local
@@ -52,7 +52,7 @@ An AI-powered predictive maintenance dashboard for pharmaceutical bioreactors. I
    Then edit `.env.local`:
 
    ```
-   GEMINI_API_KEY=your_gemini_api_key_here
+   DEEPSEEK_API_KEY=your_deepseek_api_key_here
    ```
 
 4. **Start the development server**
@@ -74,8 +74,8 @@ An AI-powered predictive maintenance dashboard for pharmaceutical bioreactors. I
 3. **Set the environment variable**
    - In the Vercel dashboard, navigate to **Project Settings → Environment Variables**.
    - Add a new variable:
-     - **Name**: `GEMINI_API_KEY`
-     - **Value**: your Google Gemini API key
+     - **Name**: `DEEPSEEK_API_KEY`
+     - **Value**: your DeepSeek API key
    - Apply to **Production**, **Preview**, and **Development** environments.
 
 4. **Deploy** — click **Deploy** and your app will be live in seconds.
@@ -86,7 +86,7 @@ An AI-powered predictive maintenance dashboard for pharmaceutical bioreactors. I
 
 | Variable | Required | Description |
 |---|---|---|
-| `GEMINI_API_KEY` | ✅ Yes | Google Gemini API key for AI predictions |
+| `DEEPSEEK_API_KEY` | ✅ Yes | DeepSeek API key for AI predictions |
 
 See `.env.example` for a template.
 
@@ -95,7 +95,7 @@ See `.env.example` for a template.
 ```
 ├── components/          # Reusable React UI components
 ├── services/
-│   └── geminiService.ts # Google Gemini AI integration
+│   └── deepseekService.ts # DeepSeek AI integration
 ├── App.tsx              # Root application component
 ├── index.tsx            # React entry point
 ├── types.ts             # Shared TypeScript types

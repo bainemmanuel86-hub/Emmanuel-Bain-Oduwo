@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, FC } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { EQUIPMENT_LIST } from '../constants';
-import { getPredictiveAnalysis } from '../services/geminiService';
+import { getPredictiveAnalysis } from '../services/deepseekService';
 import { SensorData, Prediction, Equipment } from '../types';
 
 const Header: FC = () => (

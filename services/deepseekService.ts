@@ -1,7 +1,10 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import OpenAI from "openai";
 import { SensorData, Equipment, Prediction } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+const client = new OpenAI({
+  baseURL: "https://api.deepseek.com",
+  apiKey: process.env.API_KEY as string,
+});
 
 export async function getPredictiveAnalysis(
   equipment: Equipment,
@@ -22,8 +25,19 @@ export async function getPredictiveAnalysis(
       return `{ ${values} }`;
   }).join('\n');
 
-  const prompt = `
-    As an expert AI in industrial pharmacy equipment, analyze the following time-series sensor data for a piece of equipment and provide a predictive maintenance report.
+  const systemPrompt = `You are an expert AI in industrial pharmacy equipment predictive maintenance. You must respond with a valid JSON object matching exactly this schema:
+{
+  "status": "Normal" | "Warning" | "Critical",
+  "timeToMaintenance": string,
+  "failureProbability24h": number (0.0 to 1.0),
+  "predictedYield": number (percentage),
+  "predictedPurity": number (percentage),
+  "recommendations": string[]
+}
+Do not include any text outside the JSON object.`;
+
+  const userPrompt = `
+    Analyze the following time-series sensor data for a piece of equipment and provide a predictive maintenance report.
 
     Equipment Details:
     - Name: ${equipment.name}
@@ -44,34 +58,17 @@ export async function getPredictiveAnalysis(
     Provide actionable recommendations.
   `;
 
-  const responseSchema = {
-    type: Type.OBJECT,
-    properties: {
-      status: { type: Type.STRING, enum: ['Normal', 'Warning', 'Critical'], description: "The overall operational status." },
-      timeToMaintenance: { type: Type.STRING, description: "Estimated time until the next required maintenance." },
-      failureProbability24h: { type: Type.NUMBER, description: "Probability of equipment failure within the next 24 hours (0.0 to 1.0)." },
-      predictedYield: { type: Type.NUMBER, description: "Predicted product yield/quality percentage based on current conditions. Default to 99.5 if not applicable." },
-      predictedPurity: { type: Type.NUMBER, description: "Predicted product purity/efficiency percentage. Default to 99.5 if not applicable." },
-      recommendations: {
-        type: Type.ARRAY,
-        items: { type: Type.STRING },
-        description: "A list of actionable recommendations for the operations team."
-      },
-    },
-    required: ['status', 'timeToMaintenance', 'failureProbability24h', 'predictedYield', 'predictedPurity', 'recommendations'],
-  };
-
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: responseSchema,
-      },
+    const response = await client.chat.completions.create({
+      model: "deepseek-chat",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+      response_format: { type: "json_object" },
     });
-    
-    const jsonText = response.text.trim();
+
+    const jsonText = response.choices[0].message.content?.trim() ?? '';
     const parsedJson = JSON.parse(jsonText);
     return parsedJson as Prediction;
   } catch (error) {
